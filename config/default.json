@@ -1,3 +1,10 @@
 {
+  "jwtPrivateKey": "cNDPnpkSGnrnGbs2GSEN",
+  "refreshTokenExpirationDurationInDays": 7,
+  "dbName": "online_library",
+  "dbUser": "postgres",
+  "dbPass": "postgres",
+  "dbPort": "5432",
+  "dbHost": "localhost",
   "port": "3000"
 }

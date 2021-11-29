@@ -1,3 +1,10 @@
 {
+  "jwtPrivateKey": "jwtPrivateKey",
+  "refreshTokenExpirationDurationInDays": "refreshTokenExpirationDurationInDays",
+  "dbName": "dbName",
+  "dbUser": "dbUser",
+  "dbPass": "dbPass",
+  "dbPort": "dbPort",
+  "dbHost": "dbHost",
   "port": "port"
 }

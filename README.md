@@ -19,6 +19,16 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
+## Migrations
+
+```bash
+# generate new migration
+npm run typeorm migration:generate -- -n TestMigration
+
+# generate empty migration
+npm run typeorm migration:create -- -n TestMigration
+```
+
 ## Test
 
 ```bash
