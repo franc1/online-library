@@ -3,12 +3,14 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
 import { BaseModel } from './_base.model';
 import { BookCategory } from './book_category.model';
 import { BookPublisher } from './book_publisher.model';
+import { BookRequest } from './book_request.model';
 import { PrintingOffice } from './printing_office.model';
 
 export enum BookStatus {
@@ -83,4 +85,10 @@ export class Book extends BaseModel {
   })
   @JoinColumn({ name: 'printing_office_id' })
   printingOffice: PrintingOffice;
+
+  @OneToMany(() => BookRequest, (bookRequest) => bookRequest.book, {
+    onDelete: 'NO ACTION',
+    onUpdate: 'NO ACTION',
+  })
+  bookRequests: BookRequest[];
 }

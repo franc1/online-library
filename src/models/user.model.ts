@@ -3,10 +3,12 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
 import { BaseModel } from './_base.model';
+import { BookRequest } from './book_request.model';
 import { Role } from './role.model';
 
 @Entity({ name: 'user' })
@@ -70,4 +72,24 @@ export class User extends BaseModel {
     length: 150,
   })
   address: string;
+
+  @OneToMany(
+    () => BookRequest,
+    (bookRequest) => bookRequest.requestResolvedBy,
+    {
+      onDelete: 'NO ACTION',
+      onUpdate: 'NO ACTION',
+    },
+  )
+  resolvedBookRequests: BookRequest[];
+
+  @OneToMany(
+    () => BookRequest,
+    (bookRequest) => bookRequest.backRequestResolvedBy,
+    {
+      onDelete: 'NO ACTION',
+      onUpdate: 'NO ACTION',
+    },
+  )
+  resolvedBackBookRequests: BookRequest[];
 }

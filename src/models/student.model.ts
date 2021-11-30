@@ -3,10 +3,12 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
 import { BaseModel } from './_base.model';
+import { BookRequest } from './book_request.model';
 import { Role } from './role.model';
 
 @Entity({ name: 'student' })
@@ -56,4 +58,10 @@ export class Student extends BaseModel {
   })
   @JoinColumn({ name: 'role_id' })
   role: Role;
+
+  @OneToMany(() => BookRequest, (bookRequest) => bookRequest.student, {
+    onDelete: 'NO ACTION',
+    onUpdate: 'NO ACTION',
+  })
+  bookRequests: BookRequest[];
 }
