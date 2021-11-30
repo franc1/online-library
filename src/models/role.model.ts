@@ -4,6 +4,12 @@ import { BaseModel } from './_base.model';
 import { Student } from './student.model';
 import { User } from './user.model';
 
+export enum RoleEnum {
+  admin = 'ADMIN',
+  librarian = 'LIBRARIAN',
+  student = 'STUDENT',
+}
+
 @Entity({ name: 'role' })
 export class Role extends BaseModel {
   @PrimaryGeneratedColumn()
