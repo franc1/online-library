@@ -5,8 +5,8 @@ import { Book } from './book.model';
 
 @Entity({ name: 'book_category' })
 export class BookCategory extends BaseModel {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn()
+  id: number;
 
   @Column('varchar', {
     nullable: false,

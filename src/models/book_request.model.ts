@@ -19,8 +19,8 @@ export enum BookRequestStatus {
 
 @Entity({ name: 'book_request' })
 export class BookRequest extends BaseModel {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn()
+  id: number;
 
   @ManyToOne(() => Student, (student) => student.bookRequests, {
     nullable: false,

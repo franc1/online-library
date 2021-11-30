@@ -20,8 +20,8 @@ export enum BookStatus {
 
 @Entity({ name: 'book' })
 export class Book extends BaseModel {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn()
+  id: number;
 
   @Column('varchar', {
     nullable: false,

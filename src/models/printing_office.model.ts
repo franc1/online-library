@@ -5,8 +5,8 @@ import { Book } from './book.model';
 
 @Entity({ name: 'printing_office' })
 export class PrintingOffice extends BaseModel {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn()
+  id: number;
 
   @Column('varchar', {
     nullable: false,

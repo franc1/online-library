@@ -6,8 +6,8 @@ import { User } from './user.model';
 
 @Entity({ name: 'role' })
 export class Role extends BaseModel {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn()
+  id: number;
 
   @Column('varchar', {
     nullable: false,

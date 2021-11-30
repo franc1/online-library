@@ -5,13 +5,13 @@ export class AddBookRelatedModels1638263581552 implements MigrationInterface {
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
-      `CREATE TABLE "book_publisher" ("created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP WITH TIME ZONE, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" character varying(100) NOT NULL, "address" character varying(150), CONSTRAINT "PK_baaa4c0d27070b4125aa5a81e25" PRIMARY KEY ("id"))`,
+      `CREATE TABLE "book_publisher" ("created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP WITH TIME ZONE, "id" SERIAL NOT NULL, "name" character varying(100) NOT NULL, "address" character varying(150), CONSTRAINT "PK_baaa4c0d27070b4125aa5a81e25" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
       `CREATE INDEX "IDX_9bc5806dd4a415f753fe720c59" ON "book_publisher" ("deleted_at") `,
     );
     await queryRunner.query(
-      `CREATE TABLE "printing_office" ("created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP WITH TIME ZONE, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" character varying(100) NOT NULL, "address" character varying(150), CONSTRAINT "PK_4b54846b868eed8ee16c494e530" PRIMARY KEY ("id"))`,
+      `CREATE TABLE "printing_office" ("created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP WITH TIME ZONE, "id" SERIAL NOT NULL, "name" character varying(100) NOT NULL, "address" character varying(150), CONSTRAINT "PK_4b54846b868eed8ee16c494e530" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
       `CREATE INDEX "IDX_7f153c43a0c477c5fa37b6d260" ON "printing_office" ("deleted_at") `,
@@ -20,13 +20,13 @@ export class AddBookRelatedModels1638263581552 implements MigrationInterface {
       `CREATE TYPE "public"."book_status_enum" AS ENUM('free', 'issued')`,
     );
     await queryRunner.query(
-      `CREATE TABLE "book" ("created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP WITH TIME ZONE, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "title" character varying(100) NOT NULL, "author" character varying(100) NOT NULL, "status" "public"."book_status_enum" NOT NULL DEFAULT 'free', "isbn" character varying(50) NOT NULL, "picture" character varying(150), "publication_date" date, "book_category_id" uuid, "book_publisher_id" uuid, "printing_office_id" uuid, CONSTRAINT "PK_a3afef72ec8f80e6e5c310b28a4" PRIMARY KEY ("id"))`,
+      `CREATE TABLE "book" ("created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP WITH TIME ZONE, "id" SERIAL NOT NULL, "title" character varying(100) NOT NULL, "author" character varying(100) NOT NULL, "status" "public"."book_status_enum" NOT NULL DEFAULT 'free', "isbn" character varying(50) NOT NULL, "picture" character varying(150), "publication_date" date, "book_category_id" INTEGER, "book_publisher_id" INTEGER, "printing_office_id" INTEGER, CONSTRAINT "PK_a3afef72ec8f80e6e5c310b28a4" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
       `CREATE INDEX "IDX_1bf2b5d9eaa5aa1afbe701ed16" ON "book" ("deleted_at") `,
     );
     await queryRunner.query(
-      `CREATE TABLE "book_category" ("created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP WITH TIME ZONE, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" character varying(100) NOT NULL, CONSTRAINT "PK_0bfe418ce140d4720d0eede7c3e" PRIMARY KEY ("id"))`,
+      `CREATE TABLE "book_category" ("created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP WITH TIME ZONE, "id" SERIAL NOT NULL, "name" character varying(100) NOT NULL, CONSTRAINT "PK_0bfe418ce140d4720d0eede7c3e" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
       `CREATE INDEX "IDX_10cc54212f609a4f7c256f267b" ON "book_category" ("deleted_at") `,
