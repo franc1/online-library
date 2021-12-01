@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as config from 'config';
 import { ConnectionOptions } from 'typeorm';
@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './auth/passport-strategies/jwt/jwt-auth.guard';
 import { StudentModule } from './student/student.module';
 import { UserModule } from './user/user.module';
+import { HttpExceptionFilter } from './utils/http-exception.filter';
 
 const ormConfig = {
   name: 'default',
@@ -41,6 +42,10 @@ const ormConfig = {
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
     },
   ],
 })

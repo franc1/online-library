@@ -1,8 +1,10 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-local';
 import { RoleEnum } from 'src/models/role.model';
 import { Student } from 'src/models/student.model';
+import { ApiError } from 'src/utils/api-error';
+import { ErrorCodes } from 'src/utils/error-codes';
 import { Token } from 'src/utils/token.request';
 
 import { AuthService } from '../../auth.service';
@@ -25,7 +27,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
       isStudent,
     );
     if (!userOrStudent) {
-      throw new UnauthorizedException();
+      throw new ApiError(400, ErrorCodes.INVALID_EMAIL_OR_PASSWORD);
     }
 
     return new Token(
