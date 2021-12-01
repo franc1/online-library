@@ -16,20 +16,26 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
       secretOrKey: jwtConstants.secret,
-      usernameField: 'email',
+      usernameField: 'id',
     });
   }
 
-  async validate(payload: { email: string; isStudent: boolean }) {
+  async validate(payload: { id: number; isStudent: boolean }) {
     if (payload.isStudent) {
-      const student = await this.studentService.findOne(payload.email, {
-        withRole: true,
-      });
+      const student = await this.studentService.findOne(
+        { id: payload.id },
+        {
+          withRole: true,
+        },
+      );
       return student;
     } else {
-      const user = await this.userService.findOne(payload.email, {
-        withRole: true,
-      });
+      const user = await this.userService.findOne(
+        { id: payload.id },
+        {
+          withRole: true,
+        },
+      );
       return user;
     }
   }

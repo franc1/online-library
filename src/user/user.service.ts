@@ -7,20 +7,34 @@ export class UserService {
   constructor(private userRepository: UserRepository) {}
 
   async findOne(
-    email: string,
+    by: { email?: string; id?: number },
     options: { withPassword?: boolean; withRole?: boolean } = {
       withPassword: false,
       withRole: false,
     },
   ): Promise<User | undefined> {
     const { withPassword, withRole } = options;
+    const { email, id } = by;
+
+    // Email or Id should be sent always!!
+    if (!email && !id) {
+      return null;
+    }
 
     const relations: string[] = [];
     if (withRole) {
       relations.push('role');
     }
+
+    const where: any = {};
+    if (id) {
+      where.id = id;
+    } else if (email) {
+      where.email = email;
+    }
+
     const user = await this.userRepository.findOneSafe({
-      where: { email },
+      where,
       relations,
     });
 

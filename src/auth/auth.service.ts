@@ -9,7 +9,7 @@ import { UserService } from 'src/user/user.service';
 @Injectable()
 export class AuthService {
   constructor(
-    private usersService: UserService,
+    private userService: UserService,
     private studentService: StudentService,
     private jwtService: JwtService,
   ) {}
@@ -20,10 +20,13 @@ export class AuthService {
     isStudent: boolean,
   ): Promise<User | Student> {
     if (isStudent) {
-      const student = await this.studentService.findOne(username, {
-        withPassword: true,
-        withRole: true,
-      });
+      const student = await this.studentService.findOne(
+        { email: username },
+        {
+          withPassword: true,
+          withRole: true,
+        },
+      );
       if (!student) {
         return null;
       }
@@ -36,10 +39,13 @@ export class AuthService {
       delete student.password;
       return student;
     } else {
-      const user = await this.usersService.findOne(username, {
-        withPassword: true,
-        withRole: true,
-      });
+      const user = await this.userService.findOne(
+        { email: username },
+        {
+          withPassword: true,
+          withRole: true,
+        },
+      );
       if (!user) {
         return null;
       }
