@@ -85,11 +85,11 @@ export class User extends BaseModel {
 
   @OneToMany(
     () => BookRequest,
-    (bookRequest) => bookRequest.backRequestResolvedBy,
+    (bookRequest) => bookRequest.returnRequestResolvedBy,
     {
       onDelete: 'NO ACTION',
       onUpdate: 'NO ACTION',
     },
   )
-  resolvedBackBookRequests: BookRequest[];
+  resolvedReturnBookRequests: BookRequest[];
 }

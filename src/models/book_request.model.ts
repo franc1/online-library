@@ -64,28 +64,28 @@ export class BookRequest extends BaseModel {
   @JoinColumn({ name: 'request_resolved_by' })
   requestResolvedBy: User; // Librarian who resolved student's request to take the book
 
-  @Column({ name: 'back_request_date', type: 'timestamptz', nullable: true })
-  backRequestDate: Date; // Date when student requests to return back the book
+  @Column({ name: 'return_request_date', type: 'timestamptz', nullable: true })
+  returnRequestDate: Date; // Date when student requests to return back the book
 
   @Column('enum', {
     nullable: true,
     enum: BookRequestStatus,
-    name: 'back_request_status',
+    name: 'return_request_status',
   })
-  backRequestStatus: BookRequestStatus; // Status of student's request to return back the book
+  returnRequestStatus: BookRequestStatus; // Status of student's request to return back the book
 
   @Column({
-    name: 'back_request_resolved_date',
+    name: 'return_request_resolved_date',
     type: 'timestamptz',
     nullable: true,
   })
-  backRequestResolvedDate: Date; // Date when librarian resolves student's request to return back the book
+  returnRequestResolvedDate: Date; // Date when librarian resolves student's request to return back the book
 
-  @ManyToOne(() => User, (user) => user.resolvedBackBookRequests, {
+  @ManyToOne(() => User, (user) => user.resolvedReturnBookRequests, {
     nullable: true,
     onDelete: 'NO ACTION',
     onUpdate: 'NO ACTION',
   })
-  @JoinColumn({ name: 'back_request_resolved_by' })
-  backRequestResolvedBy: User; // Librarian who resolved student's request to return back the book
+  @JoinColumn({ name: 'return_request_resolved_by' })
+  returnRequestResolvedBy: User; // Librarian who resolved student's request to return back the book
 }
