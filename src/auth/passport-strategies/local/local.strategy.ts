@@ -1,6 +1,9 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-local';
+import { RoleEnum } from 'src/models/role.model';
+import { Student } from 'src/models/student.model';
+import { Token } from 'src/utils/token.request';
 
 import { AuthService } from '../../auth.service';
 
@@ -25,6 +28,10 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
       throw new UnauthorizedException();
     }
 
-    return userOrStudent;
+    return new Token(
+      userOrStudent.id,
+      userOrStudent.role?.name as RoleEnum,
+      userOrStudent instanceof Student,
+    );
   }
 }

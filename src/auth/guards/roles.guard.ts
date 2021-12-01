@@ -2,7 +2,8 @@ import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC_KEY } from 'src/decorators/public-route.decorator';
 import { IRolesOptions, ROLES_KEY } from 'src/decorators/roles.decorator';
-import { Role, RoleEnum } from 'src/models/role.model';
+import { RoleEnum } from 'src/models/role.model';
+import { RequestWithToken } from 'src/utils/token.request';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -24,26 +25,22 @@ export class RolesGuard implements CanActivate {
     }
 
     const { disallowAdmin } = options;
-    const request = context.switchToHttp().getRequest();
-    const userRole = request?.user?.role as Role;
+    const request = context.switchToHttp().getRequest() as RequestWithToken;
+    const userRole = request?.user?.role;
 
-    // Doesn't allow - if userRole doesn't exist, or if admin is attempting to use route he is not allowed
-    if (!userRole || (disallowAdmin && userRole.name === RoleEnum.admin)) {
+    // Doesn't allow - if admin is attempting to use route he is not allowed
+    if (disallowAdmin && userRole === RoleEnum.admin) {
       return false;
     }
 
     // Allow - if @Roles decorator contains no roles, or if admin is logged in
-    if (
-      !requiredSomeOfRoles ||
-      requiredSomeOfRoles.length === 0 ||
-      userRole.name === RoleEnum.admin
-    ) {
+    if (!requiredSomeOfRoles?.length || userRole === RoleEnum.admin) {
       return true;
     }
 
     // Check if userRole belongs to some of required roles from @Roles decorator
     for (const role of requiredSomeOfRoles) {
-      if (userRole.name === role) {
+      if (userRole === role) {
         return true;
       }
     }

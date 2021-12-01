@@ -5,6 +5,7 @@ import { Student } from 'src/models/student.model';
 import { User } from 'src/models/user.model';
 import { StudentService } from 'src/student/student.service';
 import { UserService } from 'src/user/user.service';
+import { Token } from 'src/utils/token.request';
 
 @Injectable()
 export class AuthService {
@@ -60,10 +61,10 @@ export class AuthService {
     }
   }
 
-  async login(userOrStudent: User | Student) {
+  async login(token: Token) {
     const payload = {
-      id: userOrStudent.id,
-      isStudent: userOrStudent instanceof Student,
+      id: token.id,
+      isStudent: token.isStudent,
     };
     return {
       accessToken: this.jwtService.sign(payload),

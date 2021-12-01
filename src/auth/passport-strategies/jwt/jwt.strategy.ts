@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
+import { RoleEnum } from 'src/models/role.model';
 import { StudentService } from 'src/student/student.service';
 import { UserService } from 'src/user/user.service';
+import { Token } from 'src/utils/token.request';
 
 import { jwtConstants } from './jwt.constants';
 
@@ -28,7 +30,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
           withRole: true,
         },
       );
-      return student;
+      return new Token(student.id, student.role?.name as RoleEnum, true);
     } else {
       const user = await this.userService.findOne(
         { id: payload.id },
@@ -36,7 +38,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
           withRole: true,
         },
       );
-      return user;
+      return new Token(user.id, user.role?.name as RoleEnum, false);
     }
   }
 }

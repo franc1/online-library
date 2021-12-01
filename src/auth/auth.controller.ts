@@ -1,7 +1,8 @@
-import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/decorators/public-route.decorator';
-import { DMSRequest } from 'src/utils/dms.request';
+import { TokenParam } from 'src/decorators/token.decorator';
+import { Token } from 'src/utils/token.request';
 
 import { AuthService } from './auth.service';
 import { LoginDTO } from './dto/login.dto';
@@ -17,9 +18,9 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(
-    @Request() req: DMSRequest,
     @Body() login: LoginDTO,
+    @TokenParam() token: Token,
   ): Promise<LoginResponseDTO> {
-    return this.authService.login(req.user);
+    return this.authService.login(token);
   }
 }
