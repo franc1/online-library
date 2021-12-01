@@ -57,7 +57,7 @@ export class Student extends BaseModel {
     onUpdate: 'NO ACTION',
   })
   @JoinColumn({ name: 'role_id' })
-  role: Role;
+  role: Role; // For now every student will have STUDENT role. This is added if need other role for students in future
 
   @OneToMany(() => BookRequest, (bookRequest) => bookRequest.student, {
     onDelete: 'NO ACTION',

@@ -39,7 +39,7 @@ export class BookRequest extends BaseModel {
   book: Book;
 
   @Column({ name: 'request_date', type: 'timestamptz', nullable: false })
-  requestDate: Date;
+  requestDate: Date; // Date when student requests to take the book
 
   @Column('enum', {
     nullable: false,
@@ -47,14 +47,14 @@ export class BookRequest extends BaseModel {
     enum: BookRequestStatus,
     name: 'request_status',
   })
-  requestStatus: BookRequestStatus;
+  requestStatus: BookRequestStatus; // Status of student's request to take the book
 
   @Column({
     name: 'request_resolved_date',
     type: 'timestamptz',
     nullable: true,
   })
-  requestResolvedDate: Date;
+  requestResolvedDate: Date; // Date when librarian resolves student's request to take the book
 
   @ManyToOne(() => User, (user) => user.resolvedBookRequests, {
     nullable: true,
@@ -62,24 +62,24 @@ export class BookRequest extends BaseModel {
     onUpdate: 'NO ACTION',
   })
   @JoinColumn({ name: 'request_resolved_by' })
-  requestResolvedBy: User;
+  requestResolvedBy: User; // Librarian who resolved student's request to take the book
 
   @Column({ name: 'back_request_date', type: 'timestamptz', nullable: true })
-  backRequestDate: Date;
+  backRequestDate: Date; // Date when student requests to return back the book
 
   @Column('enum', {
     nullable: true,
     enum: BookRequestStatus,
     name: 'back_request_status',
   })
-  backRequestStatus: BookRequestStatus;
+  backRequestStatus: BookRequestStatus; // Status of student's request to return back the book
 
   @Column({
     name: 'back_request_resolved_date',
     type: 'timestamptz',
     nullable: true,
   })
-  backRequestResolvedDate: Date;
+  backRequestResolvedDate: Date; // Date when librarian resolves student's request to return back the book
 
   @ManyToOne(() => User, (user) => user.resolvedBackBookRequests, {
     nullable: true,
@@ -87,5 +87,5 @@ export class BookRequest extends BaseModel {
     onUpdate: 'NO ACTION',
   })
   @JoinColumn({ name: 'back_request_resolved_by' })
-  backRequestResolvedBy: User;
+  backRequestResolvedBy: User; // Librarian who resolved student's request to return back the book
 }

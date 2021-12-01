@@ -8,13 +8,24 @@ export class StudentService {
 
   async findOne(
     email: string,
-    options: { withPassword: boolean } = { withPassword: false },
+    options: { withPassword?: boolean; withRole?: boolean } = {
+      withPassword: false,
+      withRole: false,
+    },
   ): Promise<Student | undefined> {
+    const { withPassword, withRole } = options;
+
+    const relations: string[] = [];
+    if (withRole) {
+      relations.push('role');
+    }
+
     const student = await this.studentRepository.findOneSafe({
       where: { email },
+      relations,
     });
 
-    if (student && !options.withPassword) {
+    if (student && !withPassword) {
       delete student.password;
     }
 

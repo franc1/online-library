@@ -1,10 +1,13 @@
 import { Module } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as config from 'config';
 import { ConnectionOptions } from 'typeorm';
 
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { AuthModule } from './auth/auth.module';
+import { JwtAuthGuard } from './auth/passport-strategies/jwt/jwt-auth.guard';
+import { StudentModule } from './student/student.module';
+import { UserModule } from './user/user.module';
 
 const ormConfig = {
   name: 'default',
@@ -28,8 +31,17 @@ const ormConfig = {
 } as ConnectionOptions;
 
 @Module({
-  imports: [TypeOrmModule.forRoot({ ...ormConfig, autoLoadEntities: true })],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [
+    TypeOrmModule.forRoot({ ...ormConfig, autoLoadEntities: true }),
+    AuthModule,
+    UserModule,
+    StudentModule,
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+  ],
 })
 export class AppModule {}
