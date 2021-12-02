@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { StudentRepository } from 'src/repositories/student.repository';
+import { StudentRepository } from 'src/student/student.repository';
 
 import { Student } from './model/student.model';
 
