@@ -1,4 +1,4 @@
-import { BaseModel } from 'src/models/_base.model';
+import { BaseModel } from 'src/shared/models/_base.model';
 import {
   FindManyOptions,
   FindOneOptions,

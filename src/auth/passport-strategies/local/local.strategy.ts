@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-local';
-import { RoleEnum } from 'src/models/role.model';
-import { Student } from 'src/models/student.model';
-import { ApiError } from 'src/utils/api-error';
-import { ErrorCodes } from 'src/utils/error-codes';
-import { Token } from 'src/utils/token.request';
+import { RoleEnum } from 'src/role/models/role.model';
+import { ApiError } from 'src/shared/api-error';
+import { ErrorCodes } from 'src/shared/error-codes';
+import { Token } from 'src/shared/token.request';
+import { Student } from 'src/student/model/student.model';
 
 import { AuthService } from '../../auth.service';
 

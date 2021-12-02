@@ -2,8 +2,8 @@ import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/decorators/public-route.decorator';
 import { TokenParam } from 'src/decorators/token.decorator';
-import { ErrorResponse } from 'src/utils/error.response';
-import { Token } from 'src/utils/token.request';
+import { ErrorResponse } from 'src/shared/error.response';
+import { Token } from 'src/shared/token.request';
 
 import { AuthService } from './auth.service';
 import { LoginDTO } from './dto/login.dto';

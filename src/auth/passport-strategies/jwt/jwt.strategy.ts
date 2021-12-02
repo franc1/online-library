@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { RoleEnum } from 'src/models/role.model';
+import { RoleEnum } from 'src/role/models/role.model';
+import { Token } from 'src/shared/token.request';
 import { StudentService } from 'src/student/student.service';
 import { UserService } from 'src/user/user.service';
-import { Token } from 'src/utils/token.request';
 
 import { jwtConstants } from './jwt.constants';
 

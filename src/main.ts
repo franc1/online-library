@@ -4,9 +4,9 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as config from 'config';
 
 import { AppModule } from './app.module';
-import { ApiError } from './utils/api-error';
-import { ErrorCodes } from './utils/error-codes';
-import { HttpExceptionFilter } from './utils/http-exception.filter';
+import { ApiError } from './shared/api-error';
+import { ErrorCodes } from './shared/error-codes';
+import { HttpExceptionFilter } from './shared/http-exception.filter';
 
 const port: number = config.get('port');
 

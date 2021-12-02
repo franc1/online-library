@@ -1,8 +1,8 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
-import { BaseModel } from './_base.model';
-import { Student } from './student.model';
-import { User } from './user.model';
+import { BaseModel } from '../../shared/models/_base.model';
+import { Student } from '../../student/model/student.model';
+import { User } from '../../user/models/user.model';
 
 export enum RoleEnum {
   admin = 'ADMIN',

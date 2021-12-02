@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import { RoleEnum } from 'src/models/role.model';
+import { RoleEnum } from 'src/role/models/role.model';
 
 export class Token {
   constructor(

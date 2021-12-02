@@ -1,4 +1,4 @@
-import { PrintingOffice } from 'src/models/printing_office.model';
+import { PrintingOffice } from 'src/printing-office/models/printing-office.model';
 import { EntityRepository } from 'typeorm';
 
 import { BaseRepository } from './base.repository';

@@ -1,7 +1,7 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
-import { BaseModel } from './_base.model';
-import { Book } from './book.model';
+import { Book } from '../../book/models/book.model';
+import { BaseModel } from '../../shared/models/_base.model';
 
 @Entity({ name: 'printing_office' })
 export class PrintingOffice extends BaseModel {

@@ -6,9 +6,15 @@ import { ConnectionOptions } from 'typeorm';
 
 import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './auth/passport-strategies/jwt/jwt-auth.guard';
+import { BookRequestModule } from './book-request/book-request.module';
+import { BookCategoryModule } from './book/book-category/book-category.module';
+import { BookPublisherModule } from './book/book-publisher/book-publisher.module';
+import { BookModule } from './book/book.module';
+import { PrintingOfficeModule } from './printing-office/printing-office.module';
+import { RoleModule } from './role/role.module';
+import { HttpExceptionFilter } from './shared/http-exception.filter';
 import { StudentModule } from './student/student.module';
 import { UserModule } from './user/user.module';
-import { HttpExceptionFilter } from './utils/http-exception.filter';
 
 const ormConfig = {
   name: 'default',
@@ -21,7 +27,7 @@ const ormConfig = {
   logger: 'advanced-console', // TODO: make custom logger
   logging: process.env.NODE_ENV !== 'production',
   migrationsRun: true,
-  entities: [__dirname + '/models/*.{js,ts}'],
+  entities: [__dirname + '/**/*.model.{js,ts}'],
   migrations: [__dirname + '/migrations/*.{js,ts}'],
   subscribers: [__dirname + '/subscribers/**/*.{js,ts}'],
   cli: {
@@ -37,6 +43,12 @@ const ormConfig = {
     AuthModule,
     UserModule,
     StudentModule,
+    BookModule,
+    BookCategoryModule,
+    BookPublisherModule,
+    PrintingOfficeModule,
+    RoleModule,
+    BookRequestModule,
   ],
   providers: [
     {

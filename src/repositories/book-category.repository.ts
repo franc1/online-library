@@ -1,4 +1,4 @@
-import { BookCategory } from 'src/models/book_category.model';
+import { BookCategory } from 'src/book/book-category/models/book-category.model';
 import { EntityRepository } from 'typeorm';
 
 import { BaseRepository } from './base.repository';

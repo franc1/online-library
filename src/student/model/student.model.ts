@@ -7,9 +7,9 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-import { BaseModel } from './_base.model';
-import { BookRequest } from './book_request.model';
-import { Role } from './role.model';
+import { BookRequest } from '../../book-request/models/book-request.model';
+import { Role } from '../../role/models/role.model';
+import { BaseModel } from '../../shared/models/_base.model';
 
 @Entity({ name: 'student' })
 export class Student extends BaseModel {

@@ -1,7 +1,7 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
-import { BaseModel } from './_base.model';
-import { Book } from './book.model';
+import { BaseModel } from '../../../shared/models/_base.model';
+import { Book } from '../../models/book.model';
 
 @Entity({ name: 'book_category' })
 export class BookCategory extends BaseModel {

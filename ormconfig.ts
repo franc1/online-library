@@ -12,7 +12,7 @@ export = {
   logger: 'advanced-console', // TODO: make custom logger
   logging: process.env.NODE_ENV !== 'production',
   migrationsRun: true,
-  entities: [__dirname + '/src/models/*.{js,ts}'],
+  entities: [__dirname + '/src/**/*.model.{js,ts}'],
   migrations: [__dirname + '/src/migrations/*.{js,ts}'],
   subscribers: [__dirname + '/src/subscribers/**/*.{js,ts}'],
   cli: {

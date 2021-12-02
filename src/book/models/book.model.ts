@@ -7,11 +7,11 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-import { BaseModel } from './_base.model';
-import { BookCategory } from './book_category.model';
-import { BookPublisher } from './book_publisher.model';
-import { BookRequest } from './book_request.model';
-import { PrintingOffice } from './printing_office.model';
+import { BookRequest } from '../../book-request/models/book-request.model';
+import { PrintingOffice } from '../../printing-office/models/printing-office.model';
+import { BaseModel } from '../../shared/models/_base.model';
+import { BookCategory } from '../book-category/models/book-category.model';
+import { BookPublisher } from '../book-publisher/models/book-publisher.model';
 
 export enum BookStatus {
   free = 'free',

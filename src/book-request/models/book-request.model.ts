@@ -6,10 +6,10 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-import { BaseModel } from './_base.model';
-import { Book } from './book.model';
-import { Student } from './student.model';
-import { User } from './user.model';
+import { Book } from '../../book/models/book.model';
+import { BaseModel } from '../../shared/models/_base.model';
+import { Student } from '../../student/model/student.model';
+import { User } from '../../user/models/user.model';
 
 export enum BookRequestStatus {
   requested = 'requested',

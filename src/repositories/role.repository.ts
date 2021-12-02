@@ -1,4 +1,4 @@
-import { Role } from 'src/models/role.model';
+import { Role } from 'src/role/models/role.model';
 import { EntityRepository } from 'typeorm';
 
 import { BaseRepository } from './base.repository';

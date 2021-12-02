@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { Student } from 'src/models/student.model';
 import { StudentRepository } from 'src/repositories/student.repository';
+
+import { Student } from './model/student.model';
 
 @Injectable()
 export class StudentService {

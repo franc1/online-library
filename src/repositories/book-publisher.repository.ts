@@ -1,4 +1,4 @@
-import { BookPublisher } from 'src/models/book_publisher.model';
+import { BookPublisher } from 'src/book/book-publisher/models/book-publisher.model';
 import { EntityRepository } from 'typeorm';
 
 import { BaseRepository } from './base.repository';
