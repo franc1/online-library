@@ -5,7 +5,7 @@ import { Not } from 'typeorm';
 
 import { BookCategoryRepository } from './book-category.repository';
 import { BookCategory } from './models/book-category.model';
-import { BookCategoryDTO } from './models/dto/request/book-category.dto';
+import { BookCategoryDTO } from './models/dto/book-category.dto';
 
 @Injectable()
 export class BookCategoryService {

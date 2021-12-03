@@ -4,8 +4,8 @@ import { ErrorCodes } from 'src/shared/error-codes';
 
 import { BookPublisherRepository } from './book-publisher.repository';
 import { BookPublisher } from './models/book-publisher.model';
-import { BookPublisherCreateDTO } from './models/dto/request/book-publisher-create.dto';
-import { BookPublisherUpdateDTO } from './models/dto/request/book-publisher-update.dto';
+import { BookPublisherCreateDTO } from './models/dto/book-publisher-create.dto';
+import { BookPublisherUpdateDTO } from './models/dto/book-publisher-update.dto';
 
 @Injectable()
 export class BookPublisherService {

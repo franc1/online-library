@@ -2,9 +2,9 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { ApiError } from 'src/shared/api-error';
 import { ErrorCodes } from 'src/shared/error-codes';
 
+import { PrintingOfficeCreateDTO } from './models/dto/printing-office-create.dto';
+import { PrintingOfficeUpdateDTO } from './models/dto/printing-office-update.dto';
 import { PrintingOffice } from './models/printing-office.model';
-import { PrintingOfficeCreateDTO } from './models/request/printing-office-create.dto';
-import { PrintingOfficeUpdateDTO } from './models/request/printing-office-update.dto';
 import { PrintingOfficeRepository } from './printing-office.repository';
 
 @Injectable()

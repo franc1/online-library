@@ -20,7 +20,7 @@ import { ErrorResponse } from 'src/shared/error.response';
 
 import { BookCategoryService } from './book-category.service';
 import { BookCategory } from './models/book-category.model';
-import { BookCategoryDTO } from './models/dto/request/book-category.dto';
+import { BookCategoryDTO } from './models/dto/book-category.dto';
 
 @Controller('book/category')
 @ApiTags('book-category')

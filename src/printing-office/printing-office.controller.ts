@@ -18,9 +18,9 @@ import { Roles } from 'src/decorators/roles.decorator';
 import { RoleEnum } from 'src/role/models/role.model';
 import { ErrorResponse } from 'src/shared/error.response';
 
+import { PrintingOfficeCreateDTO } from './models/dto/printing-office-create.dto';
+import { PrintingOfficeUpdateDTO } from './models/dto/printing-office-update.dto';
 import { PrintingOffice } from './models/printing-office.model';
-import { PrintingOfficeCreateDTO } from './models/request/printing-office-create.dto';
-import { PrintingOfficeUpdateDTO } from './models/request/printing-office-update.dto';
 import { PrintingOfficeService } from './printing-office.service';
 
 @Controller('printing-office')

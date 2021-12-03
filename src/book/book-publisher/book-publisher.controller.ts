@@ -20,8 +20,8 @@ import { ErrorResponse } from 'src/shared/error.response';
 
 import { BookPublisherService } from './book-publisher.service';
 import { BookPublisher } from './models/book-publisher.model';
-import { BookPublisherCreateDTO } from './models/dto/request/book-publisher-create.dto';
-import { BookPublisherUpdateDTO } from './models/dto/request/book-publisher-update.dto';
+import { BookPublisherCreateDTO } from './models/dto/book-publisher-create.dto';
+import { BookPublisherUpdateDTO } from './models/dto/book-publisher-update.dto';
 
 @Controller('book/publisher')
 @ApiTags('book-publisher')
