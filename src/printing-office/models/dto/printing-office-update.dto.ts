@@ -5,11 +5,11 @@ export class PrintingOfficeUpdateDTO {
   @IsNotEmpty()
   @IsString()
   @MaxLength(100)
-  name: string;
+  name?: string;
 
   @IsOptional()
   @IsNotEmpty()
   @IsString()
   @MaxLength(150)
-  address: string;
+  address?: string;
 }

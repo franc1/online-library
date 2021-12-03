@@ -10,5 +10,5 @@ export class BookPublisherCreateDTO {
   @IsNotEmpty()
   @IsString()
   @MaxLength(150)
-  address: string;
+  address?: string;
 }
