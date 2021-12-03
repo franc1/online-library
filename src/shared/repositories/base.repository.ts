@@ -127,7 +127,7 @@ export class BaseRepository<T extends BaseModel> extends Repository<T> {
       })
       .execute();
   }
-  removeSafe(id: string, entity: BaseModel): Promise<any> {
+  removeSafe(id: number, entity: BaseModel): Promise<any> {
     entity.deletedDate = new Date();
     return this.createQueryBuilder()
       .update()
