@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -56,7 +57,7 @@ export class BookController {
   })
   @Get(':id')
   async get(
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
     @TokenParam() token: Token,
   ): Promise<Book> {
     const book = await this.bookService.get(id, token);
@@ -78,7 +79,7 @@ export class BookController {
   })
   @Patch(':id')
   async update(
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Body() bookDTO: BookUpdateDTO,
   ): Promise<Book> {
     const book = await this.bookService.update(id, bookDTO);
@@ -91,7 +92,7 @@ export class BookController {
     type: ErrorResponse,
   })
   @Delete(':id')
-  async delete(@Param('id') id: number): Promise<void> {
+  async delete(@Param('id', ParseIntPipe) id: number): Promise<void> {
     await this.bookService.delete(id);
   }
 }

@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
 } from '@nestjs/common';
@@ -51,7 +52,7 @@ export class PrintingOfficeController {
     type: ErrorResponse,
   })
   @Get(':id')
-  async get(@Param('id') id: number): Promise<PrintingOffice> {
+  async get(@Param('id', ParseIntPipe) id: number): Promise<PrintingOffice> {
     const printingOffice = await this.printingOfficeService.findOne(id);
 
     return plainToClass(PrintingOffice, printingOffice);
@@ -75,7 +76,7 @@ export class PrintingOfficeController {
   })
   @Patch(':id')
   async update(
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Body() printingOfficeDTO: PrintingOfficeUpdateDTO,
   ): Promise<PrintingOffice> {
     const printingOffice = await this.printingOfficeService.update(
@@ -91,7 +92,7 @@ export class PrintingOfficeController {
     type: ErrorResponse,
   })
   @Delete(':id')
-  async delete(@Param('id') id: number): Promise<void> {
+  async delete(@Param('id', ParseIntPipe) id: number): Promise<void> {
     await this.printingOfficeService.delete(id);
   }
 }

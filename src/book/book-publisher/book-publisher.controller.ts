@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
 } from '@nestjs/common';
@@ -51,7 +52,7 @@ export class BookPublisherController {
     type: ErrorResponse,
   })
   @Get(':id')
-  async get(@Param('id') id: number): Promise<BookPublisher> {
+  async get(@Param('id', ParseIntPipe) id: number): Promise<BookPublisher> {
     const bookPublisher = await this.bookPublisherService.findOne(id);
 
     return plainToClass(BookPublisher, bookPublisher);
@@ -75,7 +76,7 @@ export class BookPublisherController {
   })
   @Patch(':id')
   async update(
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Body() bookPublisherDTO: BookPublisherUpdateDTO,
   ): Promise<BookPublisher> {
     const bookPublisher = await this.bookPublisherService.update(
@@ -91,7 +92,7 @@ export class BookPublisherController {
     type: ErrorResponse,
   })
   @Delete(':id')
-  async delete(@Param('id') id: number): Promise<void> {
+  async delete(@Param('id', ParseIntPipe) id: number): Promise<void> {
     await this.bookPublisherService.delete(id);
   }
 }
