@@ -14,6 +14,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { plainToClass } from 'class-transformer';
 import { Roles } from 'src/decorators/roles.decorator';
 import { RoleEnum } from 'src/role/models/role.model';
 import { ErrorResponse } from 'src/shared/error.response';
@@ -23,7 +24,7 @@ import { BookPublisher } from './models/book-publisher.model';
 import { BookPublisherCreateDTO } from './models/dto/book-publisher-create.dto';
 import { BookPublisherUpdateDTO } from './models/dto/book-publisher-update.dto';
 
-@Controller('book/publisher')
+@Controller('book-publisher')
 @ApiTags('book-publisher')
 @ApiBadRequestResponse({
   type: ErrorResponse,
@@ -40,7 +41,9 @@ export class BookPublisherController {
   @Roles([RoleEnum.librarian])
   @Get()
   async getAll(): Promise<BookPublisher[]> {
-    return await this.bookPublisherService.findAll();
+    const bookPublishers = await this.bookPublisherService.findAll();
+
+    return plainToClass(BookPublisher, bookPublishers);
   }
 
   @Roles([RoleEnum.librarian])
@@ -49,7 +52,9 @@ export class BookPublisherController {
   })
   @Get(':id')
   async get(@Param('id') id: number): Promise<BookPublisher> {
-    return await this.bookPublisherService.findOne(id);
+    const bookPublisher = await this.bookPublisherService.findOne(id);
+
+    return plainToClass(BookPublisher, bookPublisher);
   }
 
   @Roles([RoleEnum.librarian])
@@ -57,7 +62,11 @@ export class BookPublisherController {
   async create(
     @Body() bookPublisherDTO: BookPublisherCreateDTO,
   ): Promise<BookPublisher> {
-    return await this.bookPublisherService.create(bookPublisherDTO);
+    const bookPublisher = await this.bookPublisherService.create(
+      bookPublisherDTO,
+    );
+
+    return plainToClass(BookPublisher, bookPublisher);
   }
 
   @Roles([RoleEnum.librarian])
@@ -69,7 +78,12 @@ export class BookPublisherController {
     @Param('id') id: number,
     @Body() bookPublisherDTO: BookPublisherUpdateDTO,
   ): Promise<BookPublisher> {
-    return await this.bookPublisherService.update(id, bookPublisherDTO);
+    const bookPublisher = await this.bookPublisherService.update(
+      id,
+      bookPublisherDTO,
+    );
+
+    return plainToClass(BookPublisher, bookPublisher);
   }
 
   @Roles([RoleEnum.librarian])

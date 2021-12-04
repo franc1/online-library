@@ -14,6 +14,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { plainToClass } from 'class-transformer';
 import { Roles } from 'src/decorators/roles.decorator';
 import { RoleEnum } from 'src/role/models/role.model';
 import { ErrorResponse } from 'src/shared/error.response';
@@ -22,7 +23,7 @@ import { BookCategoryService } from './book-category.service';
 import { BookCategory } from './models/book-category.model';
 import { BookCategoryDTO } from './models/dto/book-category.dto';
 
-@Controller('book/category')
+@Controller('book-category')
 @ApiTags('book-category')
 @ApiBadRequestResponse({
   type: ErrorResponse,
@@ -39,7 +40,9 @@ export class BookCategoryController {
   @Roles([RoleEnum.librarian])
   @Get()
   async getAll(): Promise<BookCategory[]> {
-    return await this.bookCategoryService.findAll();
+    const bookCategories = await this.bookCategoryService.findAll();
+
+    return plainToClass(BookCategory, bookCategories);
   }
 
   @Roles([RoleEnum.librarian])
@@ -48,7 +51,9 @@ export class BookCategoryController {
   })
   @Get(':id')
   async get(@Param('id') id: number): Promise<BookCategory> {
-    return await this.bookCategoryService.findOne(id);
+    const bookCategory = await this.bookCategoryService.findOne(id);
+
+    return plainToClass(BookCategory, bookCategory);
   }
 
   @Roles([RoleEnum.librarian])
@@ -56,7 +61,9 @@ export class BookCategoryController {
   async create(
     @Body() bookCategoryDTO: BookCategoryDTO,
   ): Promise<BookCategory> {
-    return await this.bookCategoryService.create(bookCategoryDTO);
+    const bookCategory = await this.bookCategoryService.create(bookCategoryDTO);
+
+    return plainToClass(BookCategory, bookCategory);
   }
 
   @Roles([RoleEnum.librarian])
@@ -68,7 +75,12 @@ export class BookCategoryController {
     @Param('id') id: number,
     @Body() bookCategoryDTO: BookCategoryDTO,
   ): Promise<BookCategory> {
-    return await this.bookCategoryService.update(id, bookCategoryDTO);
+    const bookCategory = await this.bookCategoryService.update(
+      id,
+      bookCategoryDTO,
+    );
+
+    return plainToClass(BookCategory, bookCategory);
   }
 
   @Roles([RoleEnum.librarian])

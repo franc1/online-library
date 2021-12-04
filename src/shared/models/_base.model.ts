@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Exclude } from 'class-transformer';
 import { Column, CreateDateColumn, Index, UpdateDateColumn } from 'typeorm';
 
 export abstract class BaseModel {
@@ -10,20 +11,20 @@ export abstract class BaseModel {
   })
   createdDate: Date;
 
+  @Exclude()
   @UpdateDateColumn({
     name: 'updated_at',
     type: 'timestamptz',
     nullable: false,
-    select: false,
   })
   updatedDate: Date;
 
   @Index()
+  @Exclude()
   @Column({
     name: 'deleted_at',
     type: 'timestamptz',
     nullable: true,
-    select: false,
   })
   deletedDate: Date;
 }

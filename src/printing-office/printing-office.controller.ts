@@ -14,6 +14,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { plainToClass } from 'class-transformer';
 import { Roles } from 'src/decorators/roles.decorator';
 import { RoleEnum } from 'src/role/models/role.model';
 import { ErrorResponse } from 'src/shared/error.response';
@@ -40,7 +41,9 @@ export class PrintingOfficeController {
   @Roles([RoleEnum.librarian])
   @Get()
   async getAll(): Promise<PrintingOffice[]> {
-    return await this.printingOfficeService.findAll();
+    const printingOffices = await this.printingOfficeService.findAll();
+
+    return plainToClass(PrintingOffice, printingOffices);
   }
 
   @Roles([RoleEnum.librarian])
@@ -49,7 +52,9 @@ export class PrintingOfficeController {
   })
   @Get(':id')
   async get(@Param('id') id: number): Promise<PrintingOffice> {
-    return await this.printingOfficeService.findOne(id);
+    const printingOffice = await this.printingOfficeService.findOne(id);
+
+    return plainToClass(PrintingOffice, printingOffice);
   }
 
   @Roles([RoleEnum.librarian])
@@ -57,7 +62,11 @@ export class PrintingOfficeController {
   async create(
     @Body() printingOfficeDTO: PrintingOfficeCreateDTO,
   ): Promise<PrintingOffice> {
-    return await this.printingOfficeService.create(printingOfficeDTO);
+    const printingOffice = await this.printingOfficeService.create(
+      printingOfficeDTO,
+    );
+
+    return plainToClass(PrintingOffice, printingOffice);
   }
 
   @Roles([RoleEnum.librarian])
@@ -69,7 +78,12 @@ export class PrintingOfficeController {
     @Param('id') id: number,
     @Body() printingOfficeDTO: PrintingOfficeUpdateDTO,
   ): Promise<PrintingOffice> {
-    return await this.printingOfficeService.update(id, printingOfficeDTO);
+    const printingOffice = await this.printingOfficeService.update(
+      id,
+      printingOfficeDTO,
+    );
+
+    return plainToClass(PrintingOffice, printingOffice);
   }
 
   @Roles([RoleEnum.librarian])
