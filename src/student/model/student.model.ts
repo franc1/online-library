@@ -68,7 +68,7 @@ export class Student extends BaseModel {
   @JoinColumn({ name: 'role_id' })
   role: Role; // For now every student will have STUDENT role. This is added if need other role for students in future
 
-  @ApiProperty()
+  @ApiProperty({ type: () => BookRequest })
   @OneToMany(() => BookRequest, (bookRequest) => bookRequest.student, {
     onDelete: 'NO ACTION',
     onUpdate: 'NO ACTION',

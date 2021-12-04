@@ -48,14 +48,37 @@ export class BookService {
   }
 
   async get(id: number, token: Token): Promise<Book> {
-    const relations = ['bookCategory', 'bookPublisher', 'printingOffice'];
+    const query = this.bookRepository
+      .createQueryBuilder('book')
+      .leftJoinAndSelect(
+        'book.bookCategory',
+        'bookCategory',
+        'bookCategory.deleted_at IS NULL',
+      )
+      .leftJoinAndSelect(
+        'book.bookPublisher',
+        'bookPublisher',
+        'bookPublisher.deleted_at IS NULL',
+      )
+      .leftJoinAndSelect(
+        'book.printingOffice',
+        'printingOffice',
+        'printingOffice.deleted_at IS NULL',
+      );
     if (!token.isStudent) {
-      relations.push('bookRequests', 'bookRequests.student');
+      query
+        .leftJoinAndSelect(
+          'book.bookRequests',
+          'bookRequest',
+          'bookRequest.deleted_at IS NULL',
+        )
+        .leftJoinAndSelect('bookRequest.student', 'student');
     }
 
-    const book = await this.bookRepository.findOneSafe(id, {
-      relations,
-    });
+    const book = await query
+      .where('book.deleted_at IS NULL')
+      .andWhere('book.id = :id', { id })
+      .getOne();
     if (!book) {
       throw new NotFoundException();
     }
@@ -179,5 +202,9 @@ export class BookService {
     }
 
     await this.bookRepository.removeSafe(id, book);
+  }
+
+  async findOneById(id: number): Promise<Book> {
+    return await this.bookRepository.findOneSafe(id);
   }
 }

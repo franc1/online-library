@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   Column,
   Entity,
@@ -19,9 +20,11 @@ export enum BookRequestStatus {
 
 @Entity({ name: 'book_request' })
 export class BookRequest extends BaseModel {
+  @ApiProperty()
   @PrimaryGeneratedColumn()
   id: number;
 
+  @ApiProperty({ type: () => Student })
   @ManyToOne(() => Student, (student) => student.bookRequests, {
     nullable: false,
     onDelete: 'NO ACTION',
@@ -30,6 +33,7 @@ export class BookRequest extends BaseModel {
   @JoinColumn({ name: 'student_id' })
   student: Student;
 
+  @ApiProperty({ type: () => Book })
   @ManyToOne(() => Book, (book) => book.bookRequests, {
     nullable: false,
     onDelete: 'NO ACTION',
@@ -38,9 +42,11 @@ export class BookRequest extends BaseModel {
   @JoinColumn({ name: 'book_id' })
   book: Book;
 
+  @ApiProperty()
   @Column({ name: 'request_date', type: 'timestamptz', nullable: false })
   requestDate: Date; // Date when student requests to take the book
 
+  @ApiProperty()
   @Column('enum', {
     nullable: false,
     default: BookRequestStatus.requested,
@@ -49,6 +55,7 @@ export class BookRequest extends BaseModel {
   })
   requestStatus: BookRequestStatus; // Status of student's request to take the book
 
+  @ApiProperty()
   @Column({
     name: 'request_resolved_date',
     type: 'timestamptz',
@@ -56,6 +63,7 @@ export class BookRequest extends BaseModel {
   })
   requestResolvedDate: Date; // Date when librarian resolves student's request to take the book
 
+  @ApiProperty()
   @ManyToOne(() => User, (user) => user.resolvedBookRequests, {
     nullable: true,
     onDelete: 'NO ACTION',
@@ -64,9 +72,11 @@ export class BookRequest extends BaseModel {
   @JoinColumn({ name: 'request_resolved_by' })
   requestResolvedBy: User; // Librarian who resolved student's request to take the book
 
+  @ApiProperty()
   @Column({ name: 'return_request_date', type: 'timestamptz', nullable: true })
   returnRequestDate: Date; // Date when student requests to return back the book
 
+  @ApiProperty()
   @Column('enum', {
     nullable: true,
     enum: BookRequestStatus,
@@ -74,6 +84,7 @@ export class BookRequest extends BaseModel {
   })
   returnRequestStatus: BookRequestStatus; // Status of student's request to return back the book
 
+  @ApiProperty()
   @Column({
     name: 'return_request_resolved_date',
     type: 'timestamptz',
@@ -81,6 +92,7 @@ export class BookRequest extends BaseModel {
   })
   returnRequestResolvedDate: Date; // Date when librarian resolves student's request to return back the book
 
+  @ApiProperty()
   @ManyToOne(() => User, (user) => user.resolvedReturnBookRequests, {
     nullable: true,
     onDelete: 'NO ACTION',

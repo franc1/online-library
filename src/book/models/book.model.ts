@@ -97,7 +97,7 @@ export class Book extends BaseModel {
   @JoinColumn({ name: 'printing_office_id' })
   printingOffice: PrintingOffice;
 
-  @ApiProperty()
+  @ApiProperty({ type: () => BookRequest })
   @OneToMany(() => BookRequest, (bookRequest) => bookRequest.book, {
     onDelete: 'NO ACTION',
     onUpdate: 'NO ACTION',

@@ -38,7 +38,17 @@ export class StudentService {
       throw new ForbiddenException(ErrorCodes.YOU_CAN_SEE_ONLY_YOUR_PROFILE);
     }
 
-    const student = await this.findOne({ id }, { withRole: true });
+    const student = await this.studentRepository
+      .createQueryBuilder('student')
+      .leftJoinAndSelect(
+        'student.bookRequests',
+        'bookRequest',
+        'bookRequest.deleted_at IS NULL',
+      )
+      .leftJoinAndSelect('bookRequest.book', 'book')
+      .where('student.deleted_at IS NULL')
+      .andWhere('student.id = :id', { id })
+      .getOne();
     if (!student) {
       throw new NotFoundException();
     }
