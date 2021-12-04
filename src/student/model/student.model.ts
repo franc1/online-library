@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 import {
   Column,
@@ -14,9 +15,11 @@ import { BaseModel } from '../../shared/models/_base.model';
 
 @Entity({ name: 'student' })
 export class Student extends BaseModel {
+  @ApiProperty()
   @PrimaryGeneratedColumn()
   id: number;
 
+  @ApiProperty()
   @Column('varchar', {
     nullable: false,
     name: 'first_name',
@@ -24,6 +27,7 @@ export class Student extends BaseModel {
   })
   firstName: string;
 
+  @ApiProperty()
   @Column('varchar', {
     nullable: false,
     name: 'last_name',
@@ -31,6 +35,7 @@ export class Student extends BaseModel {
   })
   lastName: string;
 
+  @ApiProperty()
   @Column('char', {
     nullable: false,
     name: 'personal_id',
@@ -38,6 +43,7 @@ export class Student extends BaseModel {
   })
   personalId: string;
 
+  @ApiProperty()
   @Column('varchar', {
     nullable: false,
     name: 'email',
@@ -53,6 +59,7 @@ export class Student extends BaseModel {
   })
   password: string;
 
+  @ApiProperty({ type: () => Role })
   @ManyToOne(() => Role, (role) => role.students, {
     nullable: false,
     onDelete: 'NO ACTION',
@@ -61,6 +68,7 @@ export class Student extends BaseModel {
   @JoinColumn({ name: 'role_id' })
   role: Role; // For now every student will have STUDENT role. This is added if need other role for students in future
 
+  @ApiProperty()
   @OneToMany(() => BookRequest, (bookRequest) => bookRequest.student, {
     onDelete: 'NO ACTION',
     onUpdate: 'NO ACTION',

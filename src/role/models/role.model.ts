@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 import { BaseModel } from '../../shared/models/_base.model';
@@ -12,9 +13,11 @@ export enum RoleEnum {
 
 @Entity({ name: 'role' })
 export class Role extends BaseModel {
+  @ApiProperty()
   @PrimaryGeneratedColumn()
   id: number;
 
+  @ApiProperty()
   @Column('varchar', {
     nullable: false,
     name: 'name',

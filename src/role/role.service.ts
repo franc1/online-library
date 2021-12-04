@@ -1,4 +1,13 @@
 import { Injectable } from '@nestjs/common';
 
+import { Role, RoleEnum } from './models/role.model';
+import { RoleRepository } from './role.repository';
+
 @Injectable()
-export class RoleService {}
+export class RoleService {
+  constructor(private roleRepository: RoleRepository) {}
+
+  async findOneByName(roleName: RoleEnum): Promise<Role> {
+    return await this.roleRepository.findOneSafe({ where: { name: roleName } });
+  }
+}
