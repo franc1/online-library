@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 import {
   Column,
@@ -14,9 +15,11 @@ import { BaseModel } from '../../shared/models/_base.model';
 
 @Entity({ name: 'user' })
 export class User extends BaseModel {
+  @ApiProperty()
   @PrimaryGeneratedColumn()
   id: number;
 
+  @ApiProperty()
   @Column('varchar', {
     nullable: false,
     name: 'first_name',
@@ -24,6 +27,7 @@ export class User extends BaseModel {
   })
   firstName: string;
 
+  @ApiProperty()
   @Column('varchar', {
     nullable: false,
     name: 'last_name',
@@ -31,6 +35,7 @@ export class User extends BaseModel {
   })
   lastName: string;
 
+  @ApiProperty()
   @Column('varchar', {
     nullable: false,
     name: 'email',
@@ -46,6 +51,7 @@ export class User extends BaseModel {
   })
   password: string;
 
+  @ApiProperty({ type: () => Role })
   @ManyToOne(() => Role, (role) => role.users, {
     nullable: false,
     onDelete: 'NO ACTION',
@@ -54,6 +60,7 @@ export class User extends BaseModel {
   @JoinColumn({ name: 'role_id' })
   role: Role;
 
+  @ApiProperty()
   @Column('char', {
     nullable: true,
     name: 'personal_id',
@@ -61,6 +68,7 @@ export class User extends BaseModel {
   })
   personalId: string;
 
+  @ApiProperty()
   @Column('varchar', {
     nullable: true,
     name: 'picture',
@@ -68,6 +76,7 @@ export class User extends BaseModel {
   })
   picture: string;
 
+  @ApiProperty()
   @Column('varchar', {
     nullable: true,
     name: 'address',

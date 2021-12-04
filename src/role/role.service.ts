@@ -10,4 +10,8 @@ export class RoleService {
   async findOneByName(roleName: RoleEnum): Promise<Role> {
     return await this.roleRepository.findOneSafe({ where: { name: roleName } });
   }
+
+  async findOneById(id: number): Promise<Role> {
+    return await this.roleRepository.findOneSafe(id);
+  }
 }

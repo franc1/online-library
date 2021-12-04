@@ -1,4 +1,8 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { BookRequestStatus } from 'src/book-request/models/book-request.model';
 import { RoleEnum } from 'src/role/models/role.model';
@@ -36,7 +40,7 @@ export class StudentService {
 
     const student = await this.findOne({ id }, { withRole: true });
     if (!student) {
-      throw new ApiError(400, ErrorCodes.INVALID_STUDENT);
+      throw new NotFoundException();
     }
 
     return student;
@@ -98,7 +102,7 @@ export class StudentService {
       relations: ['role'],
     });
     if (!student) {
-      throw new ApiError(400, ErrorCodes.INVALID_STUDENT);
+      throw new NotFoundException();
     }
 
     if (studentDTO.firstName) {
@@ -126,7 +130,7 @@ export class StudentService {
   ): Promise<void> {
     const student = await this.studentRepository.findOneSafe(token.id);
     if (!student) {
-      throw new ApiError(400, ErrorCodes.INVALID_STUDENT);
+      throw new NotFoundException();
     }
 
     const validPassword = await bcrypt.compare(
@@ -146,7 +150,7 @@ export class StudentService {
       relations: ['bookRequests'],
     });
     if (!student) {
-      throw new ApiError(400, ErrorCodes.INVALID_STUDENT);
+      throw new NotFoundException();
     }
 
     // Do not allow to delete student if he has any unreturned book
