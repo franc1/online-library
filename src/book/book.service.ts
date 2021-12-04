@@ -2,12 +2,15 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrintingOfficeService } from 'src/printing-office/printing-office.service';
 import { ApiError } from 'src/shared/api-error';
 import { ErrorCodes } from 'src/shared/error-codes';
+import { Token } from 'src/shared/token.request';
+import { FindCondition, Like } from 'typeorm';
 
 import { BookCategoryService } from './book-category/book-category.service';
 import { BookPublisherService } from './book-publisher/book-publisher.service';
 import { BookRepository } from './book.repository';
 import { Book, BookStatus } from './models/book.model';
 import { BookCreateDTO } from './models/dto/book-create.dto';
+import { BookFilter } from './models/dto/book-filter.dto';
 import { BookUpdateDTO } from './models/dto/book-update.dto';
 
 @Injectable()
@@ -18,6 +21,47 @@ export class BookService {
     private readonly bookPublisherService: BookPublisherService,
     private readonly printingOfficeService: PrintingOfficeService,
   ) {}
+
+  async getAll(bookFilter: BookFilter): Promise<Book[]> {
+    const { query, bookCategoryId, bookPublisherId, status } = bookFilter;
+
+    const where: FindCondition<Book> = {};
+    if (query) {
+      where.title = Like(`%${query}%`);
+    }
+    if (bookCategoryId) {
+      (where as any).bookCategory = bookCategoryId;
+    }
+    if (bookPublisherId) {
+      (where as any).bookPublisher = bookPublisherId;
+    }
+    if (status) {
+      where.status = status;
+    }
+
+    const books = await this.bookRepository.findSafe({
+      relations: ['bookCategory', 'bookPublisher', 'printingOffice'],
+      where,
+    });
+
+    return books;
+  }
+
+  async get(id: number, token: Token): Promise<Book> {
+    const relations = ['bookCategory', 'bookPublisher', 'printingOffice'];
+    if (!token.isStudent) {
+      relations.push('bookRequests', 'bookRequests.student');
+    }
+
+    const book = await this.bookRepository.findOneSafe(id, {
+      relations,
+    });
+    if (!book) {
+      throw new NotFoundException();
+    }
+
+    return book;
+  }
 
   async create(bookDTO: BookCreateDTO): Promise<Book> {
     const book = new Book();

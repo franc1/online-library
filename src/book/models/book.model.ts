@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   Column,
   Entity,
@@ -20,9 +21,11 @@ export enum BookStatus {
 
 @Entity({ name: 'book' })
 export class Book extends BaseModel {
+  @ApiProperty()
   @PrimaryGeneratedColumn()
   id: number;
 
+  @ApiProperty()
   @Column('varchar', {
     nullable: false,
     name: 'title',
@@ -30,6 +33,7 @@ export class Book extends BaseModel {
   })
   title: string;
 
+  @ApiProperty()
   @Column('varchar', {
     nullable: false,
     name: 'author',
@@ -37,6 +41,7 @@ export class Book extends BaseModel {
   })
   author: string;
 
+  @ApiProperty()
   @Column('enum', {
     nullable: false,
     default: BookStatus.free,
@@ -45,6 +50,7 @@ export class Book extends BaseModel {
   })
   status: BookStatus;
 
+  @ApiProperty()
   @Column('varchar', {
     nullable: false,
     name: 'isbn',
@@ -52,6 +58,7 @@ export class Book extends BaseModel {
   })
   isbn: string;
 
+  @ApiProperty()
   @Column('varchar', {
     nullable: true,
     name: 'picture',
@@ -59,9 +66,11 @@ export class Book extends BaseModel {
   })
   picture: string;
 
+  @ApiProperty()
   @Column('date', { name: 'publication_date', nullable: true })
   publicationDate: Date;
 
+  @ApiProperty()
   @ManyToOne(() => BookCategory, (bookCategory) => bookCategory.books, {
     nullable: true,
     onDelete: 'NO ACTION',
@@ -70,6 +79,7 @@ export class Book extends BaseModel {
   @JoinColumn({ name: 'book_category_id' })
   bookCategory: BookCategory;
 
+  @ApiProperty()
   @ManyToOne(() => BookPublisher, (bookPublisher) => bookPublisher.books, {
     nullable: true,
     onDelete: 'NO ACTION',
@@ -78,6 +88,7 @@ export class Book extends BaseModel {
   @JoinColumn({ name: 'book_publisher_id' })
   bookPublisher: BookPublisher;
 
+  @ApiProperty()
   @ManyToOne(() => PrintingOffice, (printingOffice) => printingOffice.books, {
     nullable: true,
     onDelete: 'NO ACTION',
@@ -86,6 +97,7 @@ export class Book extends BaseModel {
   @JoinColumn({ name: 'printing_office_id' })
   printingOffice: PrintingOffice;
 
+  @ApiProperty()
   @OneToMany(() => BookRequest, (bookRequest) => bookRequest.book, {
     onDelete: 'NO ACTION',
     onUpdate: 'NO ACTION',
