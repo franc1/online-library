@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { BookRequestStatus } from 'src/book-request/models/book-request.model';
 import { RoleEnum } from 'src/role/models/role.model';
 import { RoleService } from 'src/role/role.service';
 import { ApiError } from 'src/shared/api-error';
@@ -19,6 +20,27 @@ export class StudentService {
     private studentRepository: StudentRepository,
     private roleService: RoleService,
   ) {}
+
+  async getAll(): Promise<Student[]> {
+    const students = await this.studentRepository.findSafe({
+      relations: ['role'],
+    });
+
+    return students;
+  }
+
+  async get(id: number, token: Token): Promise<Student> {
+    if (token.isStudent && token.id !== id) {
+      throw new ForbiddenException(ErrorCodes.YOU_CAN_SEE_ONLY_YOUR_PROFILE);
+    }
+
+    const student = await this.findOne({ id }, { withRole: true });
+    if (!student) {
+      throw new ApiError(400, ErrorCodes.INVALID_STUDENT);
+    }
+
+    return student;
+  }
 
   async findOne(
     by: { email?: string; id?: number },
@@ -117,5 +139,28 @@ export class StudentService {
 
     student.password = await hashPassword(updatePasswordDTO.newPassword);
     await this.studentRepository.save(student);
+  }
+
+  async delete(id: number): Promise<void> {
+    const student = await this.studentRepository.findOneSafe(id, {
+      relations: ['bookRequests'],
+    });
+    if (!student) {
+      throw new ApiError(400, ErrorCodes.INVALID_STUDENT);
+    }
+
+    // Do not allow to delete student if he has any unreturned book
+    if (
+      student.bookRequests.filter(
+        (br) =>
+          br.deletedDate === null &&
+          br.requestStatus === BookRequestStatus.accepted &&
+          br.returnRequestStatus === null,
+      ).length
+    ) {
+      throw new ApiError(400, ErrorCodes.CANNOT_DELETE_BOOK_ISSUED);
+    }
+
+    await this.studentRepository.removeSafe(id, student);
   }
 }

@@ -1,6 +1,8 @@
 import {
   Body,
   Controller,
+  Delete,
+  Get,
   Param,
   ParseIntPipe,
   Patch,
@@ -41,6 +43,28 @@ export class StudentController {
   constructor(private readonly studentService: StudentService) {}
 
   @Roles([RoleEnum.librarian])
+  @Get()
+  async getAll(): Promise<Student[]> {
+    const students = await this.studentService.getAll();
+
+    return plainToClass(Student, students);
+  }
+
+  @Roles([RoleEnum.librarian, RoleEnum.student])
+  @ApiNotFoundResponse({
+    type: ErrorResponse,
+  })
+  @Get(':id')
+  async get(
+    @Param('id', ParseIntPipe) id: number,
+    @TokenParam() token: Token,
+  ): Promise<Student> {
+    const student = await this.studentService.get(id, token);
+
+    return plainToClass(Student, student);
+  }
+
+  @Roles([RoleEnum.librarian])
   @Post()
   async create(@Body() studentDTO: StudentCreateDTO): Promise<Student> {
     const student = await this.studentService.create(studentDTO);
@@ -74,4 +98,15 @@ export class StudentController {
 
     return plainToClass(Student, student);
   }
+
+  @Roles([RoleEnum.librarian])
+  @ApiNotFoundResponse({
+    type: ErrorResponse,
+  })
+  @Delete(':id')
+  async delete(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    await this.studentService.delete(id);
+  }
+
+  // TODO - add student registration !
 }
