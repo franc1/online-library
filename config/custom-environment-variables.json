@@ -6,5 +6,6 @@
   "dbPass": "dbPass",
   "dbPort": "dbPort",
   "dbHost": "dbHost",
-  "port": "port"
+  "port": "port",
+  "maxNumberOfIssuedBooksPerStudent": "maxNumberOfIssuedBooksPerStudent"
 }

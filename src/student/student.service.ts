@@ -12,6 +12,7 @@ import { ErrorCodes } from 'src/shared/error-codes';
 import { hashPassword } from 'src/shared/hash-password';
 import { Token } from 'src/shared/token.request';
 import { StudentRepository } from 'src/student/student.repository';
+import { Not } from 'typeorm';
 
 import { StudentCreateDTO } from './model/dto/student-create.dto';
 import { UpdatePasswordDTO } from './model/dto/student-update-password.dto';
@@ -96,6 +97,14 @@ export class StudentService {
   }
 
   async create(studentDTO: StudentCreateDTO): Promise<Student> {
+    // Check email existence
+    const countEmails = await this.studentRepository.countSafe({
+      where: { email: studentDTO.email },
+    });
+    if (countEmails) {
+      throw new ApiError(400, ErrorCodes.EMAIL_ALREADY_EXISTS);
+    }
+
     const student = new Student();
     student.firstName = studentDTO.firstName;
     student.lastName = studentDTO.lastName;
@@ -125,6 +134,13 @@ export class StudentService {
       student.personalId = studentDTO.personalId;
     }
     if (studentDTO.email) {
+      // Check email existence
+      const countEmails = await this.studentRepository.countSafe({
+        where: { id: Not(id), email: studentDTO.email },
+      });
+      if (countEmails) {
+        throw new ApiError(400, ErrorCodes.EMAIL_ALREADY_EXISTS);
+      }
       student.email = studentDTO.email;
     }
     if (studentDTO.password) {

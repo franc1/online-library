@@ -10,6 +10,7 @@ import { ErrorCodes } from 'src/shared/error-codes';
 import { hashPassword } from 'src/shared/hash-password';
 import { Token } from 'src/shared/token.request';
 import { UserRepository } from 'src/user/user.repository';
+import { Not } from 'typeorm';
 
 import { UserCreateDTO } from './models/dto/user-create.dto';
 import { UserUpdateDTO } from './models/dto/user-update.dto';
@@ -83,6 +84,14 @@ export class UserService {
   }
 
   async create(userDTO: UserCreateDTO): Promise<User> {
+    // Check email existence
+    const countEmails = await this.userRepository.countSafe({
+      where: { email: userDTO.email },
+    });
+    if (countEmails) {
+      throw new ApiError(400, ErrorCodes.EMAIL_ALREADY_EXISTS);
+    }
+
     // Find role
     const role = await this.roleService.findOneById(userDTO.roleId);
     if (!role || role.name === RoleEnum.student) {
@@ -144,6 +153,13 @@ export class UserService {
       user.personalId = userDTO.personalId;
     }
     if (userDTO.email) {
+      // Check email existence
+      const countEmails = await this.userRepository.countSafe({
+        where: { id: Not(id), email: userDTO.email },
+      });
+      if (countEmails) {
+        throw new ApiError(400, ErrorCodes.EMAIL_ALREADY_EXISTS);
+      }
       user.email = userDTO.email;
     }
     if (userDTO.password) {
