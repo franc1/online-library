@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Param,
   ParseIntPipe,
   Patch,
@@ -38,6 +39,35 @@ import { ResolveRequestDTO } from './models/dto/resolve-request.dto';
 })
 export class BookRequestController {
   constructor(private readonly bookRequestService: BookRequestService) {}
+
+  @Roles([RoleEnum.librarian, RoleEnum.student])
+  @Get('currently-rented')
+  async getAllCurrentlyRentedBooks(
+    @TokenParam() token: Token,
+  ): Promise<BookRequest[]> {
+    const requestsOfCurrentlyRentedBooks =
+      await this.bookRequestService.getAllCurrentlyRentedBooks(token);
+
+    return plainToClass(BookRequest, requestsOfCurrentlyRentedBooks);
+  }
+
+  @Roles([RoleEnum.librarian])
+  @Get('active-requests')
+  async getAllActiveRequests(): Promise<BookRequest[]> {
+    const activeBookRequests =
+      await this.bookRequestService.getAllActiveRequests();
+
+    return plainToClass(BookRequest, activeBookRequests);
+  }
+
+  @Roles([RoleEnum.librarian])
+  @Get('active-return-requests')
+  async getAllActiveReturnRequests(): Promise<BookRequest[]> {
+    const activeReturnBookRequests =
+      await this.bookRequestService.getAllActiveReturnRequests();
+
+    return plainToClass(BookRequest, activeReturnBookRequests);
+  }
 
   @Roles([RoleEnum.student], { disallowAdmin: true })
   @Post()

@@ -7,7 +7,7 @@ import { ErrorCodes } from 'src/shared/error-codes';
 import { Token } from 'src/shared/token.request';
 import { StudentService } from 'src/student/student.service';
 import { UserService } from 'src/user/user.service';
-import { Not } from 'typeorm';
+import { FindCondition, Not } from 'typeorm';
 
 import { BookRequestRepository } from './book-request.repository';
 import { BookRequest, BookRequestStatus } from './models/book-request.model';
@@ -26,6 +26,67 @@ export class BookRequestService {
     private readonly bookService: BookService,
     private readonly studentService: StudentService,
   ) {}
+
+  async getAllCurrentlyRentedBooks(token: Token): Promise<BookRequest[]> {
+    const relations = ['book'];
+    if (!token.isStudent) {
+      relations.push('student', 'requestResolvedBy', 'returnRequestResolvedBy');
+    }
+
+    const where: FindCondition<BookRequest>[] = [
+      {
+        requestStatus: BookRequestStatus.accepted,
+        returnRequestStatus: null,
+      },
+      {
+        requestStatus: BookRequestStatus.accepted,
+        returnRequestStatus: BookRequestStatus.requested,
+      },
+    ];
+    if (token.isStudent) {
+      where.forEach((w) => ((w as any).student = token.id));
+    }
+
+    const bookRequests = await this.bookRequestRepository.findSafe({
+      relations,
+      where,
+    });
+
+    return bookRequests;
+  }
+
+  async getAllActiveRequests(): Promise<BookRequest[]> {
+    const bookRequests = await this.bookRequestRepository.findSafe({
+      relations: [
+        'book',
+        'student',
+        'requestResolvedBy',
+        'returnRequestResolvedBy',
+      ],
+      where: {
+        requestStatus: BookRequestStatus.requested,
+      },
+    });
+
+    return bookRequests;
+  }
+
+  async getAllActiveReturnRequests(): Promise<BookRequest[]> {
+    const bookRequests = await this.bookRequestRepository.findSafe({
+      relations: [
+        'book',
+        'student',
+        'requestResolvedBy',
+        'returnRequestResolvedBy',
+      ],
+      where: {
+        requestStatus: BookRequestStatus.accepted,
+        returnRequestStatus: BookRequestStatus.requested,
+      },
+    });
+
+    return bookRequests;
+  }
 
   async createRequest(
     bookRequestDTO: BookRequestCreateDTO,
