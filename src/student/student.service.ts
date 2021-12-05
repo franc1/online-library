@@ -39,7 +39,7 @@ export class StudentService {
       throw new ForbiddenException(ErrorCodes.YOU_CAN_SEE_ONLY_YOUR_PROFILE);
     }
 
-    const student = await this.studentRepository
+    const query = this.studentRepository
       .createQueryBuilder('student')
       .leftJoinAndSelect(
         'student.bookRequests',
@@ -48,8 +48,16 @@ export class StudentService {
       )
       .leftJoinAndSelect('bookRequest.book', 'book')
       .where('student.deleted_at IS NULL')
-      .andWhere('student.id = :id', { id })
-      .getOne();
+      .andWhere('student.id = :id', { id });
+    if (!token.isStudent) {
+      query
+        .leftJoinAndSelect('bookRequest.requestResolvedBy', 'requestResolvedBy')
+        .leftJoinAndSelect(
+          'bookRequest.returnRequestResolvedBy',
+          'returnRequestResolvedBy',
+        );
+    }
+    const student = await query.getOne();
     if (!student) {
       throw new NotFoundException();
     }

@@ -72,7 +72,12 @@ export class BookService {
           'bookRequest',
           'bookRequest.deleted_at IS NULL',
         )
-        .leftJoinAndSelect('bookRequest.student', 'student');
+        .leftJoinAndSelect('bookRequest.student', 'student')
+        .leftJoinAndSelect('bookRequest.requestResolvedBy', 'requestResolvedBy')
+        .leftJoinAndSelect(
+          'bookRequest.returnRequestResolvedBy',
+          'returnRequestResolvedBy',
+        );
     }
 
     const book = await query
