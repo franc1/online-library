@@ -59,6 +59,22 @@ export class Student extends BaseModel {
   })
   password: string;
 
+  @ApiProperty()
+  @Column('boolean', {
+    nullable: false,
+    default: false,
+    name: 'is_registered',
+  })
+  isRegistered: boolean; // Shows if student is registered by himself
+
+  @ApiProperty()
+  @Column('varchar', {
+    nullable: true,
+    name: 'registration_code',
+    length: 100,
+  })
+  registrationCode: string;
+
   @ApiProperty({ type: () => Role })
   @ManyToOne(() => Role, (role) => role.students, {
     nullable: false,
