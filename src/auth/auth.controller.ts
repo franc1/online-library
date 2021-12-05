@@ -1,5 +1,5 @@
 import { Body, Controller, Post, UseGuards } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/decorators/public-route.decorator';
 import { TokenParam } from 'src/decorators/token.decorator';
 import { ErrorResponse } from 'src/shared/error.response';
@@ -18,6 +18,7 @@ import { LocalAuthGuard } from './passport-strategies/local/local-auth.guard';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @ApiSecurity({})
   @Public()
   @UseGuards(LocalAuthGuard)
   @Post('login')

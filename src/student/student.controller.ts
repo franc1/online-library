@@ -12,6 +12,7 @@ import {
   ApiBadRequestResponse,
   ApiForbiddenResponse,
   ApiNotFoundResponse,
+  ApiSecurity,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
@@ -66,12 +67,14 @@ export class StudentController {
     return plainToClass(Student, student);
   }
 
+  @ApiSecurity({})
   @Public()
   @Post('register')
   async initRegistration(@Body() studentDTO: StudentCreateDTO): Promise<void> {
     await this.studentService.initRegistration(studentDTO);
   }
 
+  @ApiSecurity({})
   @Public()
   @Patch('complete-registration')
   async completeRegistration(
