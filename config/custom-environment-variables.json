@@ -7,5 +7,9 @@
   "dbPort": "dbPort",
   "dbHost": "dbHost",
   "port": "port",
-  "maxNumberOfIssuedBooksPerStudent": "maxNumberOfIssuedBooksPerStudent"
+  "maxNumberOfIssuedBooksPerStudent": "maxNumberOfIssuedBooksPerStudent",
+  "mailHost": "mailHost",
+  "mailUser": "mailUser",
+  "mailPassword": "mailPassword",
+  "mailFrom": "mailFrom"
 }

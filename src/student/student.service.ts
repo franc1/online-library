@@ -4,7 +4,9 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import * as crypto from 'crypto';
 import { BookRequestStatus } from 'src/book-request/models/book-request.model';
+import { MailService } from 'src/mail/mail.service';
 import { RoleEnum } from 'src/role/models/role.model';
 import { RoleService } from 'src/role/role.service';
 import { ApiError } from 'src/shared/api-error';
@@ -12,8 +14,10 @@ import { ErrorCodes } from 'src/shared/error-codes';
 import { hashPassword } from 'src/shared/hash-password';
 import { Token } from 'src/shared/token.request';
 import { StudentRepository } from 'src/student/student.repository';
-import { Not } from 'typeorm';
+import { getConnection, Not } from 'typeorm';
+import { promisify } from 'util';
 
+import { StudentCompleteRegistrationDTO } from './model/dto/student-complete-registration.dto';
 import { StudentCreateDTO } from './model/dto/student-create.dto';
 import { UpdatePasswordDTO } from './model/dto/student-update-password.dto';
 import { StudentUpdateDTO } from './model/dto/student-update.dto';
@@ -24,6 +28,7 @@ export class StudentService {
   constructor(
     private studentRepository: StudentRepository,
     private roleService: RoleService,
+    private mailService: MailService,
   ) {}
 
   async getAll(): Promise<Student[]> {
@@ -102,6 +107,63 @@ export class StudentService {
     }
 
     return student;
+  }
+
+  async initRegistration(studentDTO: StudentCreateDTO): Promise<void> {
+    // Check email existence
+    const countEmails = await this.studentRepository.countSafe({
+      where: { email: studentDTO.email },
+    });
+    if (countEmails) {
+      throw new ApiError(400, ErrorCodes.EMAIL_ALREADY_EXISTS);
+    }
+
+    await getConnection().transaction(async (entityManager) => {
+      const registrationCode = (
+        await promisify(crypto.randomBytes)(4)
+      ).toString('hex');
+
+      let student = new Student();
+      student.firstName = studentDTO.firstName;
+      student.lastName = studentDTO.lastName;
+      student.personalId = studentDTO.personalId;
+      student.email = studentDTO.email;
+      student.password = await hashPassword(studentDTO.password);
+      student.role = await this.roleService.findOneByName(RoleEnum.student); // For now, each student will have STUDENT role
+
+      student.deletedDate = new Date(); // We will delete this field when student complete registration
+      student.isRegistered = true;
+      student.registrationCode = registrationCode;
+      student = await entityManager.save(student);
+
+      try {
+        await this.mailService.sendStudentRegistrationCode(
+          student,
+          registrationCode,
+        );
+      } catch (e) {
+        throw new ApiError(400, ErrorCodes.EMAIL_CANNOT_BE_SENT);
+      }
+    });
+  }
+
+  async completeRegistration(
+    studentCompleteRegistrationDTO: StudentCompleteRegistrationDTO,
+  ): Promise<void> {
+    // Check email existence
+    const student = await this.studentRepository.findOne({
+      where: {
+        email: studentCompleteRegistrationDTO.email,
+        registrationCode: studentCompleteRegistrationDTO.registrationCode,
+      },
+    });
+    if (!student) {
+      throw new NotFoundException();
+    }
+
+    student.deletedDate = null;
+    student.registrationCode = null;
+    await this.studentRepository.save(student);
   }
 
   async create(studentDTO: StudentCreateDTO): Promise<Student> {

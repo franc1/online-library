@@ -7,5 +7,9 @@
   "dbPort": "5432",
   "dbHost": "localhost",
   "port": "3000",
-  "maxNumberOfIssuedBooksPerStudent": 5
+  "maxNumberOfIssuedBooksPerStudent": 5,
+  "mailHost": "smtp.example.com",
+  "mailUser": "user@example.com",
+  "mailPassword": "123456",
+  "mailFrom": "noreply@example.com"
 }

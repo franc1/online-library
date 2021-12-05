@@ -16,12 +16,14 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
+import { Public } from 'src/decorators/public-route.decorator';
 import { Roles } from 'src/decorators/roles.decorator';
 import { TokenParam } from 'src/decorators/token.decorator';
 import { RoleEnum } from 'src/role/models/role.model';
 import { ErrorResponse } from 'src/shared/error.response';
 import { Token } from 'src/shared/token.request';
 
+import { StudentCompleteRegistrationDTO } from './model/dto/student-complete-registration.dto';
 import { StudentCreateDTO } from './model/dto/student-create.dto';
 import { UpdatePasswordDTO } from './model/dto/student-update-password.dto';
 import { StudentUpdateDTO } from './model/dto/student-update.dto';
@@ -62,6 +64,22 @@ export class StudentController {
     const student = await this.studentService.get(id, token);
 
     return plainToClass(Student, student);
+  }
+
+  @Public()
+  @Post('register')
+  async initRegistration(@Body() studentDTO: StudentCreateDTO): Promise<void> {
+    await this.studentService.initRegistration(studentDTO);
+  }
+
+  @Public()
+  @Patch('complete-registration')
+  async completeRegistration(
+    @Body() studentCompleteRegistrationDTO: StudentCompleteRegistrationDTO,
+  ): Promise<void> {
+    await this.studentService.completeRegistration(
+      studentCompleteRegistrationDTO,
+    );
   }
 
   @Roles([RoleEnum.librarian])
@@ -107,6 +125,4 @@ export class StudentController {
   async delete(@Param('id', ParseIntPipe) id: number): Promise<void> {
     await this.studentService.delete(id);
   }
-
-  // TODO - add student registration !
 }

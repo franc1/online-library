@@ -15,6 +15,7 @@ import { RoleModule } from './role/role.module';
 import { HttpExceptionFilter } from './shared/http-exception.filter';
 import { StudentModule } from './student/student.module';
 import { UserModule } from './user/user.module';
+import { MailModule } from './mail/mail.module';
 
 const ormConfig = {
   name: 'default',
@@ -49,6 +50,7 @@ const ormConfig = {
     PrintingOfficeModule,
     RoleModule,
     BookRequestModule,
+    MailModule,
   ],
   providers: [
     {
