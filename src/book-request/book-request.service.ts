@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import * as config from 'config';
 import { BookService } from 'src/book/book.service';
 import { BookStatus } from 'src/book/models/book.model';
@@ -12,6 +12,7 @@ import { Not } from 'typeorm';
 import { BookRequestRepository } from './book-request.repository';
 import { BookRequest, BookRequestStatus } from './models/book-request.model';
 import { BookRequestCreateDTO } from './models/dto/book-request-create.dto';
+import { ResolveRequestDTO } from './models/dto/resolve-request.dto';
 
 const maxNumberOfIssuedBooksPerStudent = config.get(
   'maxNumberOfIssuedBooksPerStudent',
@@ -26,7 +27,7 @@ export class BookRequestService {
     private readonly studentService: StudentService,
   ) {}
 
-  async create(
+  async createRequest(
     bookRequestDTO: BookRequestCreateDTO,
     token: Token,
   ): Promise<BookRequest> {
@@ -68,5 +69,63 @@ export class BookRequestService {
     bookRequest.requestDate = new Date();
     bookRequest.requestStatus = BookRequestStatus.requested;
     return await this.bookRequestRepository.save(bookRequest);
+  }
+
+  async createReturnRequest(id: number, token: Token): Promise<void> {
+    const bookRequest = await this.bookRequestRepository.findOneSafe(id, {
+      where: {
+        student: token.id,
+        requestStatus: BookRequestStatus.accepted,
+        returnRequestStatus: null,
+      },
+    });
+    if (!bookRequest) {
+      throw new NotFoundException();
+    }
+
+    bookRequest.returnRequestDate = new Date();
+    bookRequest.returnRequestStatus = BookRequestStatus.requested;
+    await this.bookRequestRepository.save(bookRequest);
+  }
+
+  async resolveRequest(
+    id: number,
+    resolveRequestDTO: ResolveRequestDTO,
+    token: Token,
+  ): Promise<void> {
+    const bookRequest = await this.bookRequestRepository.findOneSafe(id, {
+      where: {
+        requestStatus: BookRequestStatus.requested,
+      },
+    });
+    if (!bookRequest) {
+      throw new NotFoundException();
+    }
+
+    bookRequest.requestResolvedDate = new Date();
+    (bookRequest as any).requestResolvedBy = token.id;
+    bookRequest.requestStatus = resolveRequestDTO.bookRequestStatus;
+    await this.bookRequestRepository.save(bookRequest);
+  }
+
+  async resolveReturnRequest(
+    id: number,
+    resolveRequestDTO: ResolveRequestDTO,
+    token: Token,
+  ): Promise<void> {
+    const bookRequest = await this.bookRequestRepository.findOneSafe(id, {
+      where: {
+        requestStatus: BookRequestStatus.accepted,
+        returnRequestStatus: BookRequestStatus.requested,
+      },
+    });
+    if (!bookRequest) {
+      throw new NotFoundException();
+    }
+
+    bookRequest.returnRequestResolvedDate = new Date();
+    (bookRequest as any).returnRequestResolvedBy = token.id;
+    bookRequest.returnRequestStatus = resolveRequestDTO.bookRequestStatus;
+    await this.bookRequestRepository.save(bookRequest);
   }
 }
