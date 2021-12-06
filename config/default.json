@@ -6,7 +6,7 @@
   "dbPass": "postgres",
   "dbPort": "5432",
   "dbHost": "localhost",
-  "port": "3000",
+  "port": "8080",
   "maxNumberOfIssuedBooksPerStudent": 5,
   "mailHost": "smtp.example.com",
   "mailUser": "user@example.com",

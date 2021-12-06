@@ -1,5 +1,18 @@
 # online-library
 
+To open on swagger, enter:
+
+```bash
+localhost:8080/api
+```
+
+Created initial administrator with credentials:
+
+```bash
+- email: admin@example.com
+- password: 123456
+```
+
 ## Installation
 
 ```bash
@@ -27,4 +40,12 @@ npm run typeorm migration:generate -- -n TestMigration
 
 # generate empty migration
 npm run typeorm migration:create -- -n TestMigration
+```
+
+## Docker
+
+If you want to run through docker, enter:
+
+```bash
+docker-compose up
 ```
