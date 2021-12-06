@@ -8,6 +8,7 @@ import {
   Patch,
   Post,
   Query,
+  Res,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -22,12 +23,16 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
+import { Response } from 'express';
 import { diskStorage } from 'multer';
 import { Roles } from 'src/decorators/roles.decorator';
 import { TokenParam } from 'src/decorators/token.decorator';
 import { RoleEnum } from 'src/role/models/role.model';
 import { ErrorResponse } from 'src/shared/error.response';
-import { editFileName, imageFileFilter } from 'src/shared/file-upload.utils';
+import {
+  editFileName,
+  imageFileFilter,
+} from 'src/shared/file-upload-download.utils';
 import { Token } from 'src/shared/token.request';
 
 import { BookService } from './book.service';
@@ -56,6 +61,18 @@ export class BookController {
     const books = await this.bookService.getAll(bookFilter);
 
     return plainToClass(Book, books);
+  }
+
+  @Roles([RoleEnum.librarian, RoleEnum.student])
+  @ApiNotFoundResponse({
+    type: ErrorResponse,
+  })
+  @Get(':id/download-image')
+  async downloadBookImage(
+    @Param('id', ParseIntPipe) id: number,
+    @Res() response: Response,
+  ): Promise<any> {
+    return await this.bookService.downloadBookImage(id, response);
   }
 
   @Roles([RoleEnum.librarian, RoleEnum.student])

@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Res,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -21,12 +22,16 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
+import { Response } from 'express';
 import { diskStorage } from 'multer';
 import { Roles } from 'src/decorators/roles.decorator';
 import { TokenParam } from 'src/decorators/token.decorator';
 import { RoleEnum } from 'src/role/models/role.model';
 import { ErrorResponse } from 'src/shared/error.response';
-import { editFileName, imageFileFilter } from 'src/shared/file-upload.utils';
+import {
+  editFileName,
+  imageFileFilter,
+} from 'src/shared/file-upload-download.utils';
 import { Token } from 'src/shared/token.request';
 
 import { UserCreateDTO } from './models/dto/user-create.dto';
@@ -55,6 +60,19 @@ export class UserController {
     const users = await this.userService.getAll();
 
     return plainToClass(User, users);
+  }
+
+  @Roles([RoleEnum.librarian, RoleEnum.student])
+  @ApiNotFoundResponse({
+    type: ErrorResponse,
+  })
+  @Get(':id/download-image')
+  async downloadUserImage(
+    @Param('id', ParseIntPipe) id: number,
+    @Res() response: Response,
+    @TokenParam() token: Token,
+  ): Promise<any> {
+    return await this.userService.downloadUserImage(id, response, token);
   }
 
   @Roles([RoleEnum.librarian])

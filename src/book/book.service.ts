@@ -1,8 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { Response } from 'express';
 import * as fs from 'fs';
 import { PrintingOfficeService } from 'src/printing-office/printing-office.service';
 import { ApiError } from 'src/shared/api-error';
 import { ErrorCodes } from 'src/shared/error-codes';
+import { downloadFile } from 'src/shared/file-upload-download.utils';
 import { Token } from 'src/shared/token.request';
 import { FindCondition, Like } from 'typeorm';
 import { promisify } from 'util';
@@ -91,6 +93,15 @@ export class BookService {
     }
 
     return book;
+  }
+
+  async downloadBookImage(id: number, response: Response): Promise<any> {
+    const book = await this.bookRepository.findOneSafe(id);
+    if (!book?.picture) {
+      throw new NotFoundException();
+    }
+
+    return await downloadFile(book.picture, response);
   }
 
   async create(bookDTO: BookCreateDTO): Promise<Book> {

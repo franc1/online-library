@@ -3,11 +3,13 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { Response } from 'express';
 import * as fs from 'fs';
 import { RoleEnum } from 'src/role/models/role.model';
 import { RoleService } from 'src/role/role.service';
 import { ApiError } from 'src/shared/api-error';
 import { ErrorCodes } from 'src/shared/error-codes';
+import { downloadFile } from 'src/shared/file-upload-download.utils';
 import { hashPassword } from 'src/shared/hash-password';
 import { Token } from 'src/shared/token.request';
 import { UserRepository } from 'src/user/user.repository';
@@ -45,6 +47,23 @@ export class UserService {
     }
 
     return user;
+  }
+
+  async downloadUserImage(
+    id: number,
+    response: Response,
+    token: Token,
+  ): Promise<any> {
+    if (token.role !== RoleEnum.admin && token.id !== id) {
+      throw new ForbiddenException(ErrorCodes.YOU_CAN_SEE_ONLY_YOUR_PROFILE);
+    }
+
+    const user = await this.findOne({ id });
+    if (!user?.picture) {
+      throw new NotFoundException();
+    }
+
+    return await downloadFile(user.picture, response);
   }
 
   async findOne(
