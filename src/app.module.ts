@@ -10,12 +10,12 @@ import { BookRequestModule } from './book-request/book-request.module';
 import { BookCategoryModule } from './book/book-category/book-category.module';
 import { BookPublisherModule } from './book/book-publisher/book-publisher.module';
 import { BookModule } from './book/book.module';
+import { MailModule } from './mail/mail.module';
 import { PrintingOfficeModule } from './printing-office/printing-office.module';
 import { RoleModule } from './role/role.module';
 import { HttpExceptionFilter } from './shared/http-exception.filter';
 import { StudentModule } from './student/student.module';
 import { UserModule } from './user/user.module';
-import { MailModule } from './mail/mail.module';
 
 const ormConfig = {
   name: 'default',

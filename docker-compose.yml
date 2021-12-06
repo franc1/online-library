@@ -1,0 +1,30 @@
+version: '3.8'
+services:
+  api:
+    image: online-library-dockerized
+    build:
+      dockerfile: Dockerfile
+      context: .
+    depends_on:
+      - postgres
+    environment:
+      NODE_ENV: development
+      dbName: online_library
+      dbUser: db_username
+      dbPass: db_123456
+      dbPort: 5432
+      dbHost: postgres
+      port: 3000
+    ports:
+      - '8080:3000'
+
+  postgres:
+    image: postgres:10.4
+    volumes:
+      - ./database:/var/lib/postgresql/data
+    ports:
+      - '35000:5432'
+    environment:
+      POSTGRES_USER: db_username
+      POSTGRES_PASSWORD: db_123456
+      POSTGRES_DB: online_library
