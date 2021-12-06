@@ -3,6 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import * as fs from 'fs';
 import { RoleEnum } from 'src/role/models/role.model';
 import { RoleService } from 'src/role/role.service';
 import { ApiError } from 'src/shared/api-error';
@@ -11,8 +12,10 @@ import { hashPassword } from 'src/shared/hash-password';
 import { Token } from 'src/shared/token.request';
 import { UserRepository } from 'src/user/user.repository';
 import { Not } from 'typeorm';
+import { promisify } from 'util';
 
 import { UserCreateDTO } from './models/dto/user-create.dto';
+import { UserUpdateAddressDTO } from './models/dto/user-update-address.dto';
 import { UserUpdateDTO } from './models/dto/user-update.dto';
 import { User } from './models/user.model';
 
@@ -112,24 +115,7 @@ export class UserService {
     return await this.userRepository.save(user);
   }
 
-  async update(
-    id: number,
-    userDTO: UserUpdateDTO,
-    token: Token,
-  ): Promise<User> {
-    if (token.role !== RoleEnum.admin) {
-      if (token.id !== id) {
-        throw new ForbiddenException(ErrorCodes.YOU_CAN_SEE_ONLY_YOUR_PROFILE);
-      }
-
-      // Librarian can only change address and reset password for himself !!!
-      delete userDTO.firstName;
-      delete userDTO.lastName;
-      delete userDTO.email;
-      delete userDTO.personalId;
-      delete userDTO.roleId;
-    }
-
+  async update(id: number, userDTO: UserUpdateDTO): Promise<User> {
     const user = await this.findOne({ id }, { withRole: true });
     if (!user) {
       throw new NotFoundException();
@@ -167,6 +153,31 @@ export class UserService {
     }
     if (userDTO.address !== undefined) {
       user.address = userDTO.address;
+    }
+
+    return await this.userRepository.save(user);
+  }
+
+  async updateAddressAndImage(
+    imagePath: string,
+    userDTO: UserUpdateAddressDTO,
+    token: Token,
+  ): Promise<User> {
+    const user = await this.findOne({ id: token.id }, { withRole: true });
+    if (!user) {
+      throw new NotFoundException();
+    }
+
+    if (userDTO.address !== undefined) {
+      user.address = userDTO.address;
+    }
+    if (imagePath) {
+      if (user.picture) {
+        try {
+          await promisify(fs.unlink)(user.picture);
+        } catch {}
+      }
+      user.picture = imagePath;
     }
 
     return await this.userRepository.save(user);
