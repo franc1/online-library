@@ -7,6 +7,10 @@ import { RoleRepository } from './role.repository';
 export class RoleService {
   constructor(private roleRepository: RoleRepository) {}
 
+  async getAll(): Promise<Role[]> {
+    return await this.roleRepository.findSafe();
+  }
+
   async findOneByName(roleName: RoleEnum): Promise<Role> {
     return await this.roleRepository.findOneSafe({ where: { name: roleName } });
   }
