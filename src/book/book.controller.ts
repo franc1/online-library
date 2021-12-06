@@ -8,19 +8,26 @@ import {
   Patch,
   Post,
   Query,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import {
   ApiBadRequestResponse,
+  ApiBody,
+  ApiConsumes,
   ApiForbiddenResponse,
   ApiNotFoundResponse,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
+import { diskStorage } from 'multer';
 import { Roles } from 'src/decorators/roles.decorator';
 import { TokenParam } from 'src/decorators/token.decorator';
 import { RoleEnum } from 'src/role/models/role.model';
 import { ErrorResponse } from 'src/shared/error.response';
+import { editFileName, imageFileFilter } from 'src/shared/file-upload.utils';
 import { Token } from 'src/shared/token.request';
 
 import { BookService } from './book.service';
@@ -69,6 +76,41 @@ export class BookController {
   @Post()
   async create(@Body() bookDTO: BookCreateDTO): Promise<Book> {
     const book = await this.bookService.create(bookDTO);
+
+    return plainToClass(Book, book);
+  }
+
+  @Roles([RoleEnum.librarian])
+  @ApiNotFoundResponse({
+    type: ErrorResponse,
+  })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        image: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @UseInterceptors(
+    FileInterceptor('image', {
+      storage: diskStorage({
+        destination: 'dist/files/book/',
+        filename: editFileName,
+      }),
+      fileFilter: imageFileFilter,
+    }),
+  )
+  @Patch(':id/image')
+  async uploadBookImage(
+    @Param('id', ParseIntPipe) id: number,
+    @UploadedFile() image: Express.Multer.File,
+  ): Promise<Book> {
+    const book = await this.bookService.uploadBookImage(id, image?.path);
 
     return plainToClass(Book, book);
   }

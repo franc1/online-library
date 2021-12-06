@@ -1,9 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import * as fs from 'fs';
 import { PrintingOfficeService } from 'src/printing-office/printing-office.service';
 import { ApiError } from 'src/shared/api-error';
 import { ErrorCodes } from 'src/shared/error-codes';
 import { Token } from 'src/shared/token.request';
 import { FindCondition, Like } from 'typeorm';
+import { promisify } from 'util';
 
 import { BookCategoryService } from './book-category/book-category.service';
 import { BookPublisherService } from './book-publisher/book-publisher.service';
@@ -193,6 +195,26 @@ export class BookService {
       book.publicationDate = null;
     }
     // TODO - implement book picture later !
+
+    return await this.bookRepository.save(book);
+  }
+
+  async uploadBookImage(id: number, imagePath: string): Promise<Book> {
+    const book = await this.bookRepository.findOneSafe(id, {
+      relations: ['bookCategory', 'bookPublisher', 'printingOffice'],
+    });
+    if (!book) {
+      throw new NotFoundException();
+    }
+
+    if (imagePath) {
+      if (book.picture) {
+        try {
+          await promisify(fs.unlink)(book.picture);
+        } catch {}
+      }
+      book.picture = imagePath;
+    }
 
     return await this.bookRepository.save(book);
   }
